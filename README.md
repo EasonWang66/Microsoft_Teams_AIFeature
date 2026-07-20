@@ -14,14 +14,15 @@ The prototype is designed around Microsoft Fluent UI visual patterns where possi
 
 ## Tools and Technologies Used
 
-Next.js — app framework, local development server, and production build pipeline
-React — component-based interface for the Teams canvas, Align panel, staged message flow, and work item modal
-TypeScript — typed mock transcript data, audit data structures, and UI state
-CSS3 — custom properties, fixed-width desktop canvas, grid layout, transitions, keyframe animations, and Fluent-inspired styling
-Segoe UI — bundled Microsoft-style typography for the prototype interface
-Figma — source of truth for detailed UI references and future design handoff
-Git & GitHub — version control and repository hosting
-Vercel — intended hosting and deployment target for embedding or linking from a Framer website
+- Confluence design system — visual structure, spacing, card patterns, and interaction polish adapted for the prototype.
+- Next.js — app framework, local development server, and production build pipeline.
+- React — component-based interface for the Teams canvas, Align panel, staged messages, and dashboard modal.
+- TypeScript — typed mock transcript data, audit structures, and UI state.
+- CSS3 — fixed-width canvas, grid layout, transitions, keyframe animation, and hover states.
+- Segoe UI — bundled Microsoft-style typography.
+- Figma — source of truth for detailed UI references and design handoff.
+- Git & GitHub — version control and repository hosting.
+- Vercel — hosting target for Framer embedding and live demo access.
 
 ## Pages
 
