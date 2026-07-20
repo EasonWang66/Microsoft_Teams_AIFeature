@@ -10,7 +10,7 @@ The prototype is designed around Microsoft Fluent UI visual patterns where possi
 
 ## Link to Live Demo
 
-[Vercel deployment link coming soon]()
+[https://microsoft-teams-ai-feature.vercel.app/](https://microsoft-teams-ai-feature.vercel.app/)
 
 ## Tools and Technologies Used
 
