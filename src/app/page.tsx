@@ -231,7 +231,7 @@ const defaultDashboardItems = [
     column: "completed",
     attachments: 3,
     comments: 1,
-    hasImage: true
+    imageSrc: "/align-panel/dashboard-redesign-banner.jpg"
   },
   {
     title: "Resolve Nav Bug",
@@ -349,24 +349,38 @@ export default function Home() {
       status?: string;
       attachments: number;
       comments: number;
-      hasImage?: boolean;
+      imageSrc?: string;
     },
     isNew = false
   ) {
+    const syncButton = (
+      <div className={item.status === "Synced" ? "sync-chip is-synced" : "sync-chip"} aria-hidden="true">
+        <img src="/align-panel/detail-icons/arrow-sync.png" alt="" aria-hidden="true" />
+        {item.status ?? "Sync to DevOps"}
+      </div>
+    );
+
     return (
       <article className={isNew ? "dashboard-card is-new" : "dashboard-card"} key={`${item.title}-${item.system}`}>
-        {item.hasImage ? <div className="dashboard-card-image" aria-hidden="true" /> : null}
-        {isNew ? <div className="dashboard-new-tag">New</div> : null}
-        <div className="dashboard-card-top">
-          <div>
+        {item.imageSrc ? <img className="dashboard-card-image" src={item.imageSrc} alt="" aria-hidden="true" /> : null}
+        {isNew ? (
+          <>
+            <div className="dashboard-new-row">
+              <div className="dashboard-new-tag">New</div>
+              {syncButton}
+            </div>
             <h3>{item.title}</h3>
             <p className="dashboard-card-system">{item.system}</p>
+          </>
+        ) : (
+          <div className="dashboard-card-top">
+            <div>
+              <h3>{item.title}</h3>
+              <p className="dashboard-card-system">{item.system}</p>
+            </div>
+            {syncButton}
           </div>
-          <div className={item.status === "Synced" ? "sync-chip is-synced" : "sync-chip"} aria-hidden="true">
-            <img src="/align-panel/detail-icons/arrow-sync.png" alt="" aria-hidden="true" />
-            {item.status ?? "Sync to DevOps"}
-          </div>
-        </div>
+        )}
         <p className="dashboard-card-copy">{item.description}</p>
         <div className="dashboard-card-footer">
           <div className="avatar-group" aria-hidden="true">
@@ -741,33 +755,39 @@ export default function Home() {
               <div className="dashboard-column">
                 <h2>Not Started</h2>
                 <div className="dashboard-add" aria-hidden="true">+</div>
-                {renderDashboardCard(
-                  {
-                    title: selectedWorkItem.title,
-                    system: selectedWorkItem.system,
-                    description: selectedWorkItem.description,
-                    attachments: selectedWorkItem.attachments,
-                    comments: selectedWorkItem.comments
-                  },
-                  true
-                )}
-                {defaultDashboardItems
-                  .filter((item) => item.column === "not-started")
-                  .map((item) => renderDashboardCard(item))}
+                <div className="dashboard-card-lane">
+                  {renderDashboardCard(
+                    {
+                      title: selectedWorkItem.title,
+                      system: selectedWorkItem.system,
+                      description: selectedWorkItem.description,
+                      attachments: selectedWorkItem.attachments,
+                      comments: selectedWorkItem.comments
+                    },
+                    true
+                  )}
+                  {defaultDashboardItems
+                    .filter((item) => item.column === "not-started")
+                    .map((item) => renderDashboardCard(item))}
+                </div>
               </div>
               <div className="dashboard-column">
                 <h2>In Progress</h2>
                 <div className="dashboard-add" aria-hidden="true">+</div>
-                {defaultDashboardItems
-                  .filter((item) => item.column === "in-progress")
-                  .map((item) => renderDashboardCard(item))}
+                <div className="dashboard-card-lane">
+                  {defaultDashboardItems
+                    .filter((item) => item.column === "in-progress")
+                    .map((item) => renderDashboardCard(item))}
+                </div>
               </div>
               <div className="dashboard-column">
                 <h2>Completed</h2>
                 <div className="dashboard-add" aria-hidden="true">+</div>
-                {defaultDashboardItems
-                  .filter((item) => item.column === "completed")
-                  .map((item) => renderDashboardCard(item))}
+                <div className="dashboard-card-lane">
+                  {defaultDashboardItems
+                    .filter((item) => item.column === "completed")
+                    .map((item) => renderDashboardCard(item))}
+                </div>
               </div>
             </section>
           </article>
