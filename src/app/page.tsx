@@ -356,6 +356,7 @@ export default function Home() {
     return (
       <article className={isNew ? "dashboard-card is-new" : "dashboard-card"} key={`${item.title}-${item.system}`}>
         {item.hasImage ? <div className="dashboard-card-image" aria-hidden="true" /> : null}
+        {isNew ? <div className="dashboard-new-tag">New</div> : null}
         <div className="dashboard-card-top">
           <div>
             <h3>{item.title}</h3>
