@@ -27,6 +27,7 @@ type WorkItemsMessage = {
 type ChatMessage = SummaryMessage | ActionMessage | WorkItemsMessage;
 
 type SaveState = "idle" | "saving" | "saved";
+type ModalView = "detail" | "dashboard";
 
 type WorkItem = {
   title: string;
@@ -181,6 +182,67 @@ const chatMessages: ChatMessage[] = [
   }
 ];
 
+const defaultDashboardItems = [
+  {
+    title: "Extract Reqs: Dark",
+    system: "DB Console UI System",
+    description: "Review the recorded sync with the front-end team to extract accessibility constraints for the new dashboard theme.",
+    status: "Synced",
+    column: "not-started",
+    attachments: 3,
+    comments: 1
+  },
+  {
+    title: "Simplify Onboarding",
+    system: "Onboarding Experience",
+    description: "Synthesize chat feedback from PMs regarding friction points in the compute scaling flow.",
+    column: "not-started",
+    attachments: 3,
+    comments: 1
+  },
+  {
+    title: "Standardize Button",
+    system: "Design System Optimization",
+    description: "Generate an updated user journey map before Thursday's sync.",
+    column: "not-started",
+    attachments: 3,
+    comments: 1
+  },
+  {
+    title: "Standardize Data Gr...",
+    system: "DB Console UI System",
+    description: "Update the main data grid to support inline editing.",
+    column: "in-progress",
+    attachments: 3,
+    comments: 1
+  },
+  {
+    title: "Document rationale",
+    system: "DB Console UI System",
+    description: "Draft the \"why\" behind removing the advanced filter panel based on yesterday's usability testing.",
+    column: "in-progress",
+    attachments: 3,
+    comments: 1
+  },
+  {
+    title: "Redesign Banner",
+    system: "Notification UX",
+    description: "Ensure the connection wizard meets WCAG 2.1 AA requirements.",
+    column: "completed",
+    attachments: 3,
+    comments: 1,
+    hasImage: true
+  },
+  {
+    title: "Resolve Nav Bug",
+    system: "DB Console UI System",
+    description: "Address the missing hover states on the top navigation based on the QA team's chat log.",
+    column: "completed",
+    attachments: 3,
+    comments: 1
+  }
+];
+
 export default function Home() {
   const chatPanelRef = useRef<HTMLElement | null>(null);
   const saveTimerRef = useRef<number | null>(null);
@@ -188,6 +250,8 @@ export default function Home() {
   const [visibleMessages, setVisibleMessages] = useState(0);
   const [selectedWorkItem, setSelectedWorkItem] = useState<WorkItem | null>(null);
   const [detailClosing, setDetailClosing] = useState(false);
+  const [modalView, setModalView] = useState<ModalView>("detail");
+  const [dashboardTransitioning, setDashboardTransitioning] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
 
@@ -244,6 +308,8 @@ export default function Home() {
     window.setTimeout(() => {
       setSelectedWorkItem(null);
       setDetailClosing(false);
+      setModalView("detail");
+      setDashboardTransitioning(false);
       setSaveState("idle");
       setShowSaveSuccess(false);
     }, 360);
@@ -261,6 +327,69 @@ export default function Home() {
       setShowSaveSuccess(true);
       saveTimerRef.current = null;
     }, 1100);
+  }
+
+  function viewInAlignDashboard() {
+    if (!selectedWorkItem || dashboardTransitioning) {
+      return;
+    }
+
+    setDashboardTransitioning(true);
+    window.setTimeout(() => {
+      setModalView("dashboard");
+      setDashboardTransitioning(false);
+    }, 260);
+  }
+
+  function renderDashboardCard(
+    item: {
+      title: string;
+      system: string;
+      description: string;
+      status?: string;
+      attachments: number;
+      comments: number;
+      hasImage?: boolean;
+    },
+    isNew = false
+  ) {
+    return (
+      <article className={isNew ? "dashboard-card is-new" : "dashboard-card"} key={`${item.title}-${item.system}`}>
+        {item.hasImage ? <div className="dashboard-card-image" aria-hidden="true" /> : null}
+        <div className="dashboard-card-top">
+          <div>
+            <h3>{item.title}</h3>
+            <p className="dashboard-card-system">{item.system}</p>
+          </div>
+          <div className={item.status === "Synced" ? "sync-chip is-synced" : "sync-chip"} aria-hidden="true">
+            <img src="/align-panel/detail-icons/arrow-sync.png" alt="" aria-hidden="true" />
+            {item.status ?? "Sync to DevOps"}
+          </div>
+        </div>
+        <p className="dashboard-card-copy">{item.description}</p>
+        <div className="dashboard-card-footer">
+          <div className="avatar-group" aria-hidden="true">
+            <span className="work-avatar gold">DF</span>
+            <span className="work-avatar green">EP</span>
+          </div>
+          <div className="work-card-actions" aria-label="Work item activity">
+            <span>
+              <img src="/align-panel/actions/attach.png" alt="" aria-hidden="true" />
+              {item.attachments}
+            </span>
+            <span>
+              <img src="/align-panel/actions/comment.png" alt="" aria-hidden="true" />
+              {item.comments}
+            </span>
+          </div>
+        </div>
+        {isNew ? (
+          <div className="new-card-popover" role="status">
+            Newly saved from the Teams meeting. Ready to review, sync, or assign from Align.
+          </div>
+        ) : null}
+      </article>
+    );
   }
 
   return (
@@ -435,18 +564,11 @@ export default function Home() {
       {selectedWorkItem ? (
         <section
           className={detailClosing ? "work-detail-overlay is-closing" : "work-detail-overlay"}
-          aria-label="Work item details"
+          aria-label={modalView === "dashboard" ? "Align project board" : "Work item details"}
         >
           <div className="work-detail-backdrop" onClick={closeWorkItemDetails} aria-hidden="true" />
-          <article className="work-detail-modal">
-            <button
-              className="detail-close-button"
-              type="button"
-              aria-label="Close work item details"
-              onClick={closeWorkItemDetails}
-            >
-              ×
-            </button>
+          {modalView === "detail" ? (
+          <article className={dashboardTransitioning ? "work-detail-modal is-switching" : "work-detail-modal"}>
             <div className="detail-topline">
               <span>{selectedWorkItem.system}</span>
               <div className="detail-toolbar" aria-label="Work item actions">
@@ -577,10 +699,78 @@ export default function Home() {
                   <h3>Saved to your Align project</h3>
                   <p>{selectedWorkItem.title} is now ready to review from your dashboard.</p>
                 </div>
-                <button type="button" className="view-align-button">View in Align</button>
+                <button type="button" className="view-align-button" onClick={viewInAlignDashboard}>View in Align</button>
               </section>
             ) : null}
           </article>
+          ) : (
+          <article className="align-dashboard-modal">
+            <header className="dashboard-header">
+              <div className="dashboard-breadcrumb">
+                <span className="work-avatar gold">DF</span>
+                <span>DB Console UI System</span>
+                <span aria-hidden="true">›</span>
+                <strong>Project Board</strong>
+              </div>
+              <div className="dashboard-actions" aria-hidden="true">
+                <div className="dashboard-command">
+                  <span className="command-plus">+</span>
+                  Generate Weekly Report
+                </div>
+                <div className="dashboard-command">
+                  <img src="/align-panel/detail-icons/arrow-sync.png" alt="" aria-hidden="true" />
+                  DevOps Multi Sync
+                </div>
+              </div>
+            </header>
+            <section className="dashboard-tabs" aria-label="Board filters">
+              <div className="dashboard-pill active">All</div>
+              <div className="dashboard-pill">Assigned Items</div>
+              <div className="dashboard-pill">Private Items</div>
+              <div className="dashboard-pill">Devops Synced items</div>
+              <div className="dashboard-view-controls" aria-hidden="true">
+                <div className="dashboard-view active"><span className="grid-glyph" />Grid</div>
+                <div className="dashboard-view"><span className="list-glyph" />List</div>
+                <div className="dashboard-divider" />
+                <div className="dashboard-filter"><span className="filter-glyph" />Filters⌄</div>
+                <div className="dashboard-more">...</div>
+              </div>
+            </section>
+            <section className="dashboard-board" aria-label="Align dashboard work items">
+              <div className="dashboard-column">
+                <h2>Not Started</h2>
+                <div className="dashboard-add" aria-hidden="true">+</div>
+                {renderDashboardCard(
+                  {
+                    title: selectedWorkItem.title,
+                    system: selectedWorkItem.system,
+                    description: selectedWorkItem.description,
+                    attachments: selectedWorkItem.attachments,
+                    comments: selectedWorkItem.comments
+                  },
+                  true
+                )}
+                {defaultDashboardItems
+                  .filter((item) => item.column === "not-started")
+                  .map((item) => renderDashboardCard(item))}
+              </div>
+              <div className="dashboard-column">
+                <h2>In Progress</h2>
+                <div className="dashboard-add" aria-hidden="true">+</div>
+                {defaultDashboardItems
+                  .filter((item) => item.column === "in-progress")
+                  .map((item) => renderDashboardCard(item))}
+              </div>
+              <div className="dashboard-column">
+                <h2>Completed</h2>
+                <div className="dashboard-add" aria-hidden="true">+</div>
+                {defaultDashboardItems
+                  .filter((item) => item.column === "completed")
+                  .map((item) => renderDashboardCard(item))}
+              </div>
+            </section>
+          </article>
+          )}
         </section>
       ) : null}
     </main>
