@@ -1256,6 +1256,16 @@ body {
   padding: 0 14px;
 }
 
+.filter-chevron {
+  align-items: center;
+  display: inline-flex;
+  font-size: 16px;
+  height: 18px;
+  line-height: 1;
+  margin-left: -6px;
+  transform: translateY(1px);
+}
+
 .dashboard-view.active {
   background: var(--teams-purple);
   color: #ffffff;
@@ -1313,7 +1323,8 @@ body {
   gap: 34px;
   grid-template-columns: repeat(3, minmax(360px, 1fr));
   min-height: 0;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   padding: 0 68px 54px;
   scrollbar-gutter: stable;
 }
@@ -1321,6 +1332,7 @@ body {
 .dashboard-column {
   display: flex;
   flex-direction: column;
+  height: 100%;
   min-height: 0;
   overflow: visible;
   position: relative;
@@ -1333,13 +1345,13 @@ body {
 
 .dashboard-column h2 {
   background: #ffffff;
+  flex: 0 0 auto;
   font-size: 21px;
   font-weight: 700;
   line-height: 1;
   margin: 0 0 30px;
   padding: 0 0 30px;
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 42;
 }
 
@@ -1356,8 +1368,8 @@ body {
   height: 46px;
   justify-content: center;
   margin-bottom: 22px;
-  position: sticky;
-  top: 51px;
+  position: relative;
+  flex: 0 0 auto;
   z-index: 42;
 }
 
@@ -1373,7 +1385,10 @@ body {
 }
 
 .dashboard-card-lane {
-  overflow: visible;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: visible;
+  overflow-y: auto;
   position: relative;
   z-index: 1;
 }
@@ -1536,13 +1551,13 @@ body {
   box-shadow: 0 14px 34px rgb(36 36 36 / 18%);
   color: #4d4d4d;
   font-size: 13px;
-  left: calc(100% + 14px);
   line-height: 1.35;
   opacity: 0;
   padding: 14px;
   pointer-events: none;
   position: absolute;
-  top: 46px;
+  left: calc(100% + 14px);
+  top: 130px;
   transform: translateY(-4px) scale(0.98);
   transition:
     opacity 160ms ease,
@@ -1551,7 +1566,7 @@ body {
   z-index: 200;
 }
 
-.dashboard-card.is-new:hover .new-card-popover {
+.dashboard-column.has-new-card:has(.dashboard-card.is-new:hover) .new-card-popover {
   opacity: 1;
   transform: translateY(0) scale(1);
 }

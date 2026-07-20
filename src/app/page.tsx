@@ -398,11 +398,6 @@ export default function Home() {
             </span>
           </div>
         </div>
-        {isNew ? (
-          <div className="new-card-popover" role="status">
-            Newly saved from the Teams meeting. Ready to review, sync, or assign from Align.
-          </div>
-        ) : null}
       </article>
     );
   }
@@ -747,7 +742,7 @@ export default function Home() {
                 <div className="dashboard-view active"><span className="grid-glyph" />Grid</div>
                 <div className="dashboard-view"><span className="list-glyph" />List</div>
                 <div className="dashboard-divider" />
-                <div className="dashboard-filter"><span className="filter-glyph" />Filters⌄</div>
+                <div className="dashboard-filter"><span className="filter-glyph" />Filters<span className="filter-chevron">⌄</span></div>
                 <div className="dashboard-more">...</div>
               </div>
             </section>
@@ -769,6 +764,9 @@ export default function Home() {
                   {defaultDashboardItems
                     .filter((item) => item.column === "not-started")
                     .map((item) => renderDashboardCard(item))}
+                </div>
+                <div className="new-card-popover" role="status">
+                  Newly saved from the Teams meeting. Ready to review, sync, or assign from Align.
                 </div>
               </div>
               <div className="dashboard-column">
