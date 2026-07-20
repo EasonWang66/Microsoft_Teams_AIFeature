@@ -752,7 +752,7 @@ export default function Home() {
               </div>
             </section>
             <section className="dashboard-board" aria-label="Align dashboard work items">
-              <div className="dashboard-column">
+              <div className="dashboard-column has-new-card">
                 <h2>Not Started</h2>
                 <div className="dashboard-add" aria-hidden="true">+</div>
                 <div className="dashboard-card-lane">

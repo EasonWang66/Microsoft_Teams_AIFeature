@@ -1324,6 +1324,11 @@ body {
   min-height: 0;
   overflow: visible;
   position: relative;
+  z-index: 1;
+}
+
+.dashboard-column.has-new-card {
+  z-index: 12;
 }
 
 .dashboard-column h2 {
@@ -1335,7 +1340,7 @@ body {
   padding: 0 0 30px;
   position: sticky;
   top: 0;
-  z-index: 18;
+  z-index: 42;
 }
 
 .dashboard-add {
@@ -1353,7 +1358,18 @@ body {
   margin-bottom: 22px;
   position: sticky;
   top: 51px;
-  z-index: 18;
+  z-index: 42;
+}
+
+.dashboard-add::after {
+  background: linear-gradient(180deg, #ffffff 0%, rgb(255 255 255 / 88%) 46%, rgb(255 255 255 / 0%) 100%);
+  content: "";
+  height: 24px;
+  left: -1px;
+  pointer-events: none;
+  position: absolute;
+  right: -1px;
+  top: calc(100% + 1px);
 }
 
 .dashboard-card-lane {
@@ -1384,7 +1400,7 @@ body {
   transition:
     box-shadow 180ms ease,
     transform 180ms ease;
-  z-index: 8;
+  z-index: 22;
 }
 
 .dashboard-card.is-new:hover {
@@ -1392,7 +1408,7 @@ body {
     0 0 0 2px rgb(91 95 199 / 48%),
     0 18px 38px rgb(91 95 199 / 25%);
   transform: translateY(-3px);
-  z-index: 30;
+  z-index: 60;
 }
 
 .dashboard-card-image {
@@ -1411,15 +1427,19 @@ body {
 }
 
 .dashboard-new-tag {
+  align-items: center;
   background: #f1f0ff;
   border: 1px solid #c8c9f7;
   border-radius: 4px;
   color: var(--teams-purple);
-  font-size: 12px;
+  display: flex;
+  font-size: 13px;
   font-weight: 700;
+  height: 28px;
+  justify-content: center;
   line-height: 1;
   margin-bottom: 12px;
-  padding: 5px 8px 6px;
+  padding: 0 10px;
 }
 
 .dashboard-new-row {
@@ -1456,12 +1476,13 @@ body {
   color: #242424;
   display: flex;
   flex: 0 0 auto;
-  font-size: 16px;
-  gap: 10px;
-  height: 42px;
+  font-size: 13px;
+  font-weight: 700;
+  gap: 6px;
+  height: 28px;
   justify-content: center;
   margin-top: 0;
-  padding: 0 16px;
+  padding: 0 10px;
   white-space: nowrap;
 }
 
@@ -1472,8 +1493,8 @@ body {
 }
 
 .sync-chip img {
-  height: 22px;
-  width: 22px;
+  height: 16px;
+  width: 16px;
 }
 
 .sync-chip.is-synced img {
@@ -1521,13 +1542,13 @@ body {
   padding: 14px;
   pointer-events: none;
   position: absolute;
-  top: 54px;
+  top: 46px;
   transform: translateY(-4px) scale(0.98);
   transition:
     opacity 160ms ease,
     transform 160ms ease;
-  width: 210px;
-  z-index: 80;
+  width: 220px;
+  z-index: 200;
 }
 
 .dashboard-card.is-new:hover .new-card-popover {
